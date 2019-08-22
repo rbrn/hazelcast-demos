@@ -1,5 +1,5 @@
-/home/costin/IdeaProjects/hazelcast-getting-started/4-hazelcast-getting-started-m4-exercise-files/before/client/src/test/java/com/pluralsight/hazelcast/client/services/customer/CustomerServiceTest.java
-/home/costin/IdeaProjects/hazelcast-getting-started/4-hazelcast-getting-started-m4-exercise-files/before/client/src/test/java/com/pluralsight/hazelcast/client/helper/StorageNodeFactory.java
-/home/costin/IdeaProjects/hazelcast-getting-started/4-hazelcast-getting-started-m4-exercise-files/before/client/src/test/java/com/pluralsight/hazelcast/client/services/reporting/DistributedSetTest.java
-/home/costin/IdeaProjects/hazelcast-getting-started/4-hazelcast-getting-started-m4-exercise-files/before/client/src/test/java/com/pluralsight/hazelcast/client/services/reporting/ReportingServiceTest.java
-/home/costin/IdeaProjects/hazelcast-getting-started/4-hazelcast-getting-started-m4-exercise-files/before/client/src/test/java/com/pluralsight/hazelcast/client/HazelcastClientTestConfiguration.java
+/home/costin/IdeaProjects/hazelcast-demos/client/src/test/java/com/pluralsight/hazelcast/client/services/reporting/DistributedSetTest.java
+/home/costin/IdeaProjects/hazelcast-demos/client/src/test/java/com/pluralsight/hazelcast/client/HazelcastClientTestConfiguration.java
+/home/costin/IdeaProjects/hazelcast-demos/client/src/test/java/com/pluralsight/hazelcast/client/helper/StorageNodeFactory.java
+/home/costin/IdeaProjects/hazelcast-demos/client/src/test/java/com/pluralsight/hazelcast/client/services/customer/CustomerServiceTest.java
+/home/costin/IdeaProjects/hazelcast-demos/client/src/test/java/com/pluralsight/hazelcast/client/services/reporting/ReportingServiceTest.java

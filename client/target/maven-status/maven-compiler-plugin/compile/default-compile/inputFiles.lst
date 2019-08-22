@@ -1,4 +1,4 @@
-/home/costin/IdeaProjects/hazelcast-getting-started/4-hazelcast-getting-started-m4-exercise-files/before/client/src/main/java/com/pluralsight/hazelcast/client/ClientApplication.java
-/home/costin/IdeaProjects/hazelcast-getting-started/4-hazelcast-getting-started-m4-exercise-files/before/client/src/main/java/com/pluralsight/hazelcast/client/config/ClientConfiguration.java
-/home/costin/IdeaProjects/hazelcast-getting-started/4-hazelcast-getting-started-m4-exercise-files/before/client/src/main/java/com/pluralsight/hazelcast/client/services/reporting/ReportingService.java
-/home/costin/IdeaProjects/hazelcast-getting-started/4-hazelcast-getting-started-m4-exercise-files/before/client/src/main/java/com/pluralsight/hazelcast/client/services/customer/CustomerService.java
+/home/costin/IdeaProjects/hazelcast-demos/client/src/main/java/com/pluralsight/hazelcast/client/config/ClientConfiguration.java
+/home/costin/IdeaProjects/hazelcast-demos/client/src/main/java/com/pluralsight/hazelcast/client/services/customer/CustomerService.java
+/home/costin/IdeaProjects/hazelcast-demos/client/src/main/java/com/pluralsight/hazelcast/client/services/reporting/ReportingService.java
+/home/costin/IdeaProjects/hazelcast-demos/client/src/main/java/com/pluralsight/hazelcast/client/ClientApplication.java

@@ -4,11 +4,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.pluarlsight.hazelcast</groupId>
-    <artifactId>module4</artifactId>
+    <artifactId>hazelcast-demo</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
-    <name>Module 4</name>
+    <name>Hazelcast Demos</name>
 
     <parent>
         <groupId>org.springframework.boot</groupId>

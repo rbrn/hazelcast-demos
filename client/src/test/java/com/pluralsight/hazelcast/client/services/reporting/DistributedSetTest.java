@@ -75,9 +75,9 @@ public class DistributedSetTest {
 
         try {
             Transaction firstTransaction = ((IQueue<Transaction>) transactions).poll(1000, TimeUnit.MILLISECONDS);
-            Transaction lastTransaction = transactions.peek();
+            Transaction lastTransaction = ((IQueue<Transaction>) transactions).take();
             assertTrue(firstTransaction.getCustomerId().equals(1L));
-            assertTrue(lastTransaction.getCustomerId().equals(100L));
+            assertTrue(lastTransaction.getCustomerId().equals(99L));
 
 
         } catch (InterruptedException e) {
@@ -90,12 +90,12 @@ public class DistributedSetTest {
 
         Ringbuffer<Transaction> transactions = hazelcastInstance.getRingbuffer("RingBufferDemo");
 
-        IntStream.rangeClosed(1, 10).forEach(i -> transactions.addAsync(createTransation(Long.valueOf(i)), OverflowPolicy.OVERWRITE));
+        IntStream.rangeClosed(1, 300).forEach(i -> transactions.addAsync(createTransation(Long.valueOf(i)), OverflowPolicy.OVERWRITE));
 
         try {
             Transaction firstTransaction = transactions.readOne(transactions.tailSequence());
 
-            assertTrue(firstTransaction.getCustomerId().equals(10L));
+            assertTrue(firstTransaction.getCustomerId().equals(300L));
             transactions.addAsync(createTransation(Long.valueOf(100)), OverflowPolicy.OVERWRITE);
             firstTransaction = transactions.readOne(transactions.tailSequence());
             assertTrue(firstTransaction.getCustomerId().equals(100L));
