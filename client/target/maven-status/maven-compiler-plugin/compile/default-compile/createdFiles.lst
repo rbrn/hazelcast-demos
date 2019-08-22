@@ -1,0 +1,4 @@
+com/pluralsight/hazelcast/client/services/customer/CustomerService.class
+com/pluralsight/hazelcast/client/services/reporting/ReportingService.class
+com/pluralsight/hazelcast/client/config/ClientConfiguration.class
+com/pluralsight/hazelcast/client/ClientApplication.class

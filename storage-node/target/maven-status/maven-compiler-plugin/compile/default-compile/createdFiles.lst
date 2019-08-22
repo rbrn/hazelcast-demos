@@ -1,0 +1,3 @@
+com/pluralsight/hazelcast/storage/StorageNodeApplication.class
+com/pluralsight/hazelcast/storage/CustomerDao.class
+com/pluralsight/hazelcast/storage/CustomersMapStore.class
