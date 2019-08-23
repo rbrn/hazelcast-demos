@@ -5,3 +5,4 @@ storage-node/target
 client/*.iml
 share/*.iml
 storage-node/*.iml
+.idea

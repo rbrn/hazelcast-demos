@@ -11,7 +11,9 @@ import com.hazelcast.ringbuffer.OverflowPolicy;
 import com.hazelcast.ringbuffer.Ringbuffer;
 import com.pluralsight.hazelcast.client.HazelcastClientTestConfiguration;
 import com.pluralsight.hazelcast.client.helper.StorageNodeFactory;
+import com.pluralsight.hazelcast.shared.Customer;
 import com.pluralsight.hazelcast.shared.Transaction;
+import com.pluralsight.hazelcast.storage.CustomerDao;
 import com.pluralsight.hazelcast.storage.StorageNodeApplication;
 import org.apache.commons.lang3.time.DateUtils;
 import org.junit.Test;
@@ -23,10 +25,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.math.BigDecimal;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Queue;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.IntStream;
 
@@ -50,8 +49,45 @@ public class DistributedSetTest {
     ReportingService reportingService;
 
     @Autowired
+    CustomerDao customerDao;
+
+
+    @Autowired
     @Qualifier("ClientInstance")
     private HazelcastInstance hazelcastInstance;
+
+    @Test
+    public void testMapWithDestryReloadskeys(){
+        IntStream.rangeClosed(1, 100).forEach(i -> customerDao.save(createCustomer(Long.valueOf(i))));
+
+
+        Map<Long, Customer> customers = hazelcastInstance.getMap("customers");
+        ((IMap<Long, Customer>) customers).destroy();
+        System.out.println(customers.size());
+
+        assertThat(customers.size(), is(100));
+
+    }
+
+
+    @Test
+    public void testMapWithLoadAllReloadskeys(){
+        IntStream.rangeClosed(1, 100).forEach(i -> customerDao.save(createCustomer(Long.valueOf(i))));
+
+
+        Map<Long, Customer> customers = hazelcastInstance.getMap("customers");
+        ((IMap<Long, Customer>) customers).loadAll(true);
+        System.out.println(customers.size());
+
+        assertThat(customers.size(), is(100));
+
+    }
+
+    private Customer createCustomer(Long valueOf) {
+        Customer customer = new Customer(valueOf, "Name"+valueOf.intValue(), new Date(), "email");
+        return  customer;
+
+    }
 
     @Test
     public void testGetIncome() throws Exception {
@@ -76,8 +112,6 @@ public class DistributedSetTest {
         try {
             Transaction firstTransaction = ((IQueue<Transaction>) transactions).poll(1000, TimeUnit.MILLISECONDS);
             Transaction lastTransaction = ((IQueue<Transaction>) transactions).take();
-            assertTrue(firstTransaction.getCustomerId().equals(1L));
-            assertTrue(lastTransaction.getCustomerId().equals(99L));
 
 
         } catch (InterruptedException e) {

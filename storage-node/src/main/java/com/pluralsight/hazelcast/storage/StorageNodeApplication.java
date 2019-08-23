@@ -63,7 +63,6 @@ public class StorageNodeApplication implements MapNames {
 
         config.addAtomicReferenceConfig(createAtomicReferenceCOnfig());
 
-
         return config;
     }
 
