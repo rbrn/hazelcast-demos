@@ -43,7 +43,7 @@ import static org.junit.Assert.assertTrue;
                 StorageNodeApplication.class
         }
 )
-public class DistributedSetTest {
+public class DistributedDataStructuresTest {
 
     @Autowired
     ReportingService reportingService;
@@ -69,6 +69,36 @@ public class DistributedSetTest {
 
     }
 
+    @Test
+    public void testMapWithLockMapThenUpdate(){
+        IntStream.rangeClosed(1, 100).forEach(i -> customerDao.save(createCustomer(Long.valueOf(i))));
+
+
+        Map<Long, Customer> customerIMap = hazelcastInstance.getMap("customers");
+        ((IMap<Long, Customer>) customerIMap).destroy();
+        System.out.println(customerIMap.size());
+
+        assertThat(customerIMap.size(), is(100));
+
+        IntStream.rangeClosed(1, 10).forEach(i -> {
+            Customer customer = createCustomer(Long.valueOf(i));
+            ((IMap<Long, Customer>) customerIMap) .lock(Long.valueOf(i));
+            customerIMap.replace(Long.valueOf(i), customer);
+            ((IMap<Long, Customer>) customerIMap).unlock(Long.valueOf(i));
+        });
+
+
+    }
+
+    /**
+     * Test Distrinbuted map. The map is duplicated on each node. Data is transfered from one node to another
+     * without partitioning
+     */
+    @Test
+    public void testDistributedMap(){
+
+    }
+
 
     @Test
     public void testMapWithLoadAllReloadskeys(){
@@ -83,7 +113,7 @@ public class DistributedSetTest {
 
     }
 
-    private Customer createCustomer(Long valueOf) {
+    public static Customer createCustomer(Long valueOf) {
         Customer customer = new Customer(valueOf, "Name"+valueOf.intValue(), new Date(), "email");
         return  customer;
 
