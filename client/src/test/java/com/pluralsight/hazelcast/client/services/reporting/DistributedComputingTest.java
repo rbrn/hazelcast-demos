@@ -2,17 +2,17 @@ package com.pluralsight.hazelcast.client.services.reporting;
 
 import com.hazelcast.client.HazelcastClient;
 import com.hazelcast.client.config.ClientConfig;
-import com.hazelcast.core.*;
-import com.hazelcast.ringbuffer.OverflowPolicy;
-import com.hazelcast.ringbuffer.Ringbuffer;
+import com.hazelcast.core.HazelcastInstance;
+import com.hazelcast.core.IExecutorService;
+import com.hazelcast.core.IMap;
+import com.hazelcast.core.Member;
 import com.pluralsight.hazelcast.client.HazelcastClientTestConfiguration;
 import com.pluralsight.hazelcast.client.helper.StorageNodeFactory;
 import com.pluralsight.hazelcast.shared.Customer;
-import com.pluralsight.hazelcast.shared.Transaction;
 import com.pluralsight.hazelcast.storage.CustomerDao;
 import com.pluralsight.hazelcast.storage.StorageNodeApplication;
+import com.pluralsight.hazelcast.storage.distributed.EchoTask;
 import com.pluralsight.hazelcast.storage.distributed.SumCustomerIdTask;
-import org.apache.commons.lang3.time.DateUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,8 +21,7 @@ import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import java.math.BigDecimal;
-import java.util.*;
+import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -31,9 +30,7 @@ import java.util.stream.IntStream;
 
 import static com.pluralsight.hazelcast.client.services.reporting.DistributedDataStructuresTest.createCustomer;
 import static org.hamcrest.core.Is.is;
-import static org.hamcrest.core.IsNull.notNullValue;
 import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
 
 /**
  * Created by Grant Little (grant@grantlittle.me)
@@ -62,7 +59,7 @@ public class DistributedComputingTest {
      * without partitioning
      */
     @Test
-    public void testDistributedMap() throws InterruptedException, ExecutionException {
+    public void testDistributedCallables() throws InterruptedException, ExecutionException {
         IntStream.rangeClosed(1, 3).forEach(i -> customerDao.save(createCustomer(Long.valueOf(i))));
 
 
@@ -87,6 +84,17 @@ public class DistributedComputingTest {
         }
 
         assertThat(result, is(6));
+    }
+
+
+    @Test
+    public void testDistributedRunnables() throws InterruptedException {
+        IExecutorService iExecutorService = hazelcastInstance.getExecutorService("default");
+
+        Map<Member, Future<String>> future = iExecutorService.submitToAllMembers(new EchoTask("Hello from"));
+
+        lock.await(2000, TimeUnit.MILLISECONDS);
+
     }
 
 

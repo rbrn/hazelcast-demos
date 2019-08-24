@@ -6,9 +6,7 @@ import com.hazelcast.core.IMap;
 import com.pluralsight.hazelcast.shared.Customer;
 
 import java.io.Serializable;
-import java.util.List;
 import java.util.concurrent.Callable;
-import java.util.stream.Collectors;
 
 public class SumCustomerIdTask implements Callable<Integer>, Serializable, HazelcastInstanceAware {
 
