@@ -6,7 +6,9 @@ import com.hazelcast.core.HazelcastInstance;
 import com.hazelcast.core.IMap;
 import com.pluralsight.hazelcast.client.HazelcastClientTestConfiguration;
 import com.pluralsight.hazelcast.client.helper.StorageNodeFactory;
+import com.pluralsight.hazelcast.shared.Customer;
 import com.pluralsight.hazelcast.shared.Transaction;
+import com.pluralsight.hazelcast.storage.CustomerDao;
 import com.pluralsight.hazelcast.storage.StorageNodeApplication;
 import org.apache.commons.lang3.time.DateUtils;
 import org.junit.Test;
@@ -20,8 +22,11 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Map;
+import java.util.stream.IntStream;
 
-import static org.junit.Assert.*;
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertThat;
 
 /**
  * Created by Grant Little (grant@grantlittle.me)
@@ -33,47 +38,48 @@ import static org.junit.Assert.*;
                 StorageNodeApplication.class
         }
 )
-public class ReportingServiceTest {
+public class DistributedDataDataStoreWithMetadataTest {
 
     @Autowired
     ReportingService reportingService;
+
+    @Autowired
+    CustomerDao customerDao;
+
 
     @Autowired
     @Qualifier("ClientInstance")
     private HazelcastInstance hazelcastInstance;
 
     @Test
-    public void testGetIncome() throws Exception {
-
-        generateTransactions(100);
-
-        Calendar cal = getCurrentDate();
-        Date end = cal.getTime();
-        cal.add(Calendar.DATE, -5);
-        Date start = cal.getTime();
-
-        BigDecimal result = reportingService.getIncome(start, end);
-        assertTrue(result.compareTo(new BigDecimal("5"))==0);
-    }
+    public void testMapStoreWithExpirationDateKeys(){
+        IntStream.rangeClosed(1, 100).forEach(i -> customerDao.save(createCustomer(Long.valueOf(i))));
 
 
-    public void generateTransactions(int count) {
-        IMap<Long, Transaction> transactionsMap = hazelcastInstance.getMap("transactions");
-        Calendar current = getCurrentDate();
-        Long customerId = 1L;
-        for (long x=count; x>0; x--) {
-            Transaction transaction = new Transaction(x, customerId, current.getTime(), new BigDecimal("1"));
-            transactionsMap.put(x, transaction);
-            current.add(Calendar.DATE,-1);
-        }
+        Map<Long, Customer> customers = hazelcastInstance.getMap("customers");
+        ((IMap<Long, Customer>) customers).destroy();
+        System.out.println(customers.size());
+
+        assertThat(customers.size(), is(100));
 
     }
 
 
+    public static Customer createCustomer(Long valueOf) {
+        Customer customer = new Customer(valueOf, "Name"+valueOf.intValue(), new Date(), "email");
+        return  customer;
+
+    }
 
 
-
-
+    private Transaction createTransation(Long value) {
+        Transaction transaction = new Transaction();
+        transaction.setAmount(BigDecimal.TEN);
+        transaction.setCustomerId(value);
+        transaction.setTransactionDateTime(new Date());
+        System.out.println("Created transaction " + transaction.toString());
+        return transaction;
+    }
 
 
     public Calendar getCurrentDate() {
